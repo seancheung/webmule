@@ -1,0 +1,20 @@
+@import "tailwindcss" source(none);
+@source "../components/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../app/**/*.{js,ts,jsx,tsx,mdx}";
+
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+:root {
+  --scrollbar-thumb: var(--color-neutral-content);
+  --scrollbar-track: transparent;
+  --header-height: 64px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}

@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Config {
+  key   String @id
+  value String
+}
+
+model Server {
+  id        Int       @id @default(autoincrement())
+  name      String
+  host      String
+  port      Int
+  histories History[]
+
+  @@unique([host, port])
+}
+
+model File {
+  id        Int             @id @default(autoincrement())
+  hash      String          @unique
+  name      String?
+  size      BigInt?
+  sources   Int?
+  complete  Int?
+  createdAt DateTime        @default(now())
+  histories FileOnHistory[]
+}
+
+model History {
+  id        Int             @id @default(autoincrement())
+  query     String
+  serverId  Int?
+  createdAt DateTime        @default(now())
+  files     FileOnHistory[]
+  server    Server?         @relation(fields: [serverId], references: [id], onDelete: SetNull)
+
+  @@index([query])
+}
+
+model FileOnHistory {
+  fileId    Int
+  historyId Int
+  file      File    @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  history   History @relation(fields: [historyId], references: [id], onDelete: Cascade)
+
+  @@id([fileId, historyId])
+}
