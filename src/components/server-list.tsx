@@ -1,18 +1,20 @@
 "use client";
 
-import { connectToServer, disconnectFromServer } from "@/lib/actions";
+import {
+  connectToServer,
+  disconnectFromServer,
+  getServers,
+} from "@/lib/actions";
 import clsx from "clsx";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import LinkIcon from "./icons/link-icon";
 import LinkSlashIcon from "./icons/link-slash-icon";
 import PencilIcon from "./icons/pencil-icon";
 import { useSession } from "./session-provider";
 
-export interface ServerListProps {
-  items: ServerInfo[];
-}
-
-export default function ServerList({ items }: ServerListProps) {
+export default function ServerList() {
+  const [items, setItems] = useState<ServerInfo[]>([]);
   const { checkIdle } = useSession();
 
   const handleConnect = (host: string, port: number) => {
@@ -22,6 +24,10 @@ export default function ServerList({ items }: ServerListProps) {
   const handleDisconnect = () => {
     disconnectFromServer().then(checkIdle);
   };
+
+  useEffect(() => {
+    getServers().then(setItems);
+  }, []);
 
   return (
     <ul className="list">

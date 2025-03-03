@@ -20,15 +20,11 @@ export interface SessionContext {
 }
 
 export interface SessionProviderProps {
-  initialSession: ClientSession;
   children?: React.ReactNode;
 }
 
-export default function SessionProvider({
-  initialSession,
-  children,
-}: SessionProviderProps) {
-  const [session, setSession] = useState<ClientSession>(initialSession);
+export default function SessionProvider({ children }: SessionProviderProps) {
+  const [session, setSession] = useState<ClientSession>({ state: 0 });
   const prevState = useRef(session.state);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -50,6 +46,10 @@ export default function SessionProvider({
     if (!isIdle(session.state)) {
       timerRef.current = setTimeout(checkIdle, 1000);
     }
+  }, [refresh]);
+
+  useEffect(() => {
+    refresh();
   }, [refresh]);
 
   useEffect(() => {

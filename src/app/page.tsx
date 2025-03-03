@@ -5,16 +5,11 @@ import SearchResults from "@/components/search-results";
 import ServerList from "@/components/server-list";
 import ServerLogs from "@/components/server-logs";
 import SessionProvider from "@/components/session-provider";
-import { getConfig, getServers, getSession } from "@/lib/actions";
 
-export default async function Home() {
-  const config = await getConfig();
-  const session = await getSession();
-  const servers = await getServers();
-
+export default function Home() {
   return (
-    <ConfigProvider intialConfig={config}>
-      <SessionProvider initialSession={session}>
+    <ConfigProvider>
+      <SessionProvider>
         <div className="flex flex-col divide-x divide-base-300 px-4 md:flex-row">
           <div className="min-w-sm pt-4 md:h-[calc(100vh-64px)] md:max-w-sm md:overflow-auto">
             <div className="flex flex-col gap-4">
@@ -22,7 +17,7 @@ export default async function Home() {
                 <div className="px-4 pb-2 text-sm tracking-wide opacity-60">
                   Available Servers
                 </div>
-                <ServerList items={servers} />
+                <ServerList />
               </div>
               <div>
                 <div className="px-4 pb-2 text-sm tracking-wide opacity-60">

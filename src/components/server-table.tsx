@@ -1,31 +1,31 @@
 "use client";
 
-import { addServer, deleteServer, updateServer } from "@/lib/actions";
+import {
+  addServer,
+  deleteServer,
+  getServers,
+  updateServer,
+} from "@/lib/actions";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CheckIcon from "./icons/check-icon";
 import CloseIcon from "./icons/close-icon";
 import PencilIcon from "./icons/pencil-icon";
 import PlusIcon from "./icons/plus-icon";
 import TrashIcon from "./icons/trash-icon";
 
-export interface ServerTableProps {
-  items: ServerItem[];
-}
-
-export default function ServerTable({ items }: ServerTableProps) {
+export default function ServerTable() {
+  const [items, setItems] = useState<ServerItem[]>([]);
   const [newItem, setNewItem] = useState<ServerItem>({
     id: 0,
     name: "",
     host: "",
     port: 0,
   });
-  const router = useRouter();
 
-  const refresh = () => {
-    router.refresh();
-  };
+  const refresh = useCallback(() => {
+    getServers().then(setItems);
+  }, []);
 
   const handleUpdate = (item: ServerItem) => {
     const { id, ...data } = item;
@@ -39,6 +39,10 @@ export default function ServerTable({ items }: ServerTableProps) {
   const handleDelete = (id: number) => {
     deleteServer(id).then(refresh);
   };
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   return (
     <table className="table table-zebra">

@@ -27,7 +27,7 @@ export default async function Page({
 
   return (
     <div className="mx-auto my-4 flex max-w-6xl flex-col items-center gap-1">
-      <ConfigProvider intialConfig={config}>
+      <ConfigProvider>
         <RouterFileTable items={list} sortKey={sortKey} sortDesc={sortDesc} />
       </ConfigProvider>
       <RouterPagination page={current} total={total} size={size} />

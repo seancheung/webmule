@@ -2,11 +2,11 @@
 
 import { getConfig, updateConfig } from "@/lib/actions";
 import { ConfigKey } from "@/lib/constants";
-import { createContext, use, useCallback, useState } from "react";
+import { createContext, use, useCallback, useEffect, useState } from "react";
 
 const Context = createContext<ConfigContext | null>(null);
 
-export type ConfigObject = Record<ConfigKey, any>;
+export type ConfigObject = Partial<Record<ConfigKey, any>>;
 
 export interface ConfigContext {
   config: Readonly<ConfigObject>;
@@ -15,15 +15,11 @@ export interface ConfigContext {
 }
 
 export interface ConfigProviderProps {
-  intialConfig: ConfigObject;
   children?: React.ReactNode;
 }
 
-export default function ConfigProvider({
-  intialConfig,
-  children,
-}: ConfigProviderProps) {
-  const [config, setConfig] = useState<ConfigObject>(intialConfig);
+export default function ConfigProvider({ children }: ConfigProviderProps) {
+  const [config, setConfig] = useState<ConfigObject>({});
 
   const refresh = useCallback(async () => {
     const config = await getConfig();
@@ -41,6 +37,10 @@ export default function ConfigProvider({
     refresh,
     update,
   };
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   return <Context.Provider value={context}>{children}</Context.Provider>;
 }
