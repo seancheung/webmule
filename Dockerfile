@@ -5,6 +5,7 @@ COPY prisma ./prisma
 COPY *.json *.js *.mjs *.ts ./
 RUN npm install
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV DATABASE_URL file:./dev.db
 RUN npm run build
 RUN npx prisma generate
 
