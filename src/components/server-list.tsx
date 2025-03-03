@@ -34,7 +34,7 @@ export default function ServerList({ items }: ServerListProps) {
         />
       ))}
       <li className="pt-2">
-        <Link className="btn btn-block btn-sm" href="/server">
+        <Link className="btn btn-block btn-sm" prefetch={false} href="/server">
           <PencilIcon />
           Edit
         </Link>
