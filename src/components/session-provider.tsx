@@ -15,7 +15,7 @@ const Context = createContext<SessionContext | null>(null);
 
 export interface SessionContext {
   session: ClientSession;
-  refresh(): Promise<ClientSession>;
+  refresh(force?: boolean): Promise<ClientSession>;
   checkIdle(): void;
 }
 
@@ -28,9 +28,9 @@ export default function SessionProvider({ children }: SessionProviderProps) {
   const prevState = useRef(session.state);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (force?: boolean) => {
     const session = await getSession();
-    if (session.state !== prevState.current) {
+    if (session.state !== prevState.current || force) {
       prevState.current = session.state;
       setSession(session);
     }
@@ -49,7 +49,7 @@ export default function SessionProvider({ children }: SessionProviderProps) {
   }, [refresh]);
 
   useEffect(() => {
-    refresh();
+    refresh(true);
   }, [refresh]);
 
   useEffect(() => {

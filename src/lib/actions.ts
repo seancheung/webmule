@@ -28,6 +28,10 @@ export async function disconnectFromServer() {
   emule.disconnect();
 }
 
+export async function clearLogs() {
+  emule.clearLogs();
+}
+
 export async function deleteServer(id: number) {
   await prisma.server.delete({
     where: { id },
